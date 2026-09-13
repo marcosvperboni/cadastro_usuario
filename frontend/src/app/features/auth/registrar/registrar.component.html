@@ -1,0 +1,93 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <div class="auth-icone">
+      <mat-icon>person_add</mat-icon>
+    </div>
+    <mat-card-title>Criar conta</mat-card-title>
+    <mat-card-subtitle>Preencha os dados para se cadastrar</mat-card-subtitle>
+
+    <mat-card-content>
+      <form [formGroup]="formulario" (ngSubmit)="registrar()">
+        <mat-form-field appearance="outline" class="campo-completo">
+          <mat-label>Nome completo</mat-label>
+          <input matInput formControlName="nome" autocomplete="name" />
+          <mat-icon matPrefix>badge</mat-icon>
+          @if (formulario.get('nome')?.hasError('required') && formulario.get('nome')?.touched) {
+            <mat-error>Informe seu nome</mat-error>
+          }
+          @if (formulario.get('nome')?.hasError('minlength')) {
+            <mat-error>Nome muito curto</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo-completo">
+          <mat-label>Telefone</mat-label>
+          <input matInput formControlName="telefone" placeholder="(11) 91234-5678" autocomplete="tel" />
+          <mat-icon matPrefix>phone</mat-icon>
+          @if (formulario.get('telefone')?.hasError('required') && formulario.get('telefone')?.touched) {
+            <mat-error>Informe o telefone</mat-error>
+          }
+          @if (formulario.get('telefone')?.hasError('pattern')) {
+            <mat-error>Use o formato (11) 91234-5678</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo-completo">
+          <mat-label>Senha</mat-label>
+          <input
+            matInput
+            formControlName="senha"
+            [type]="ocultarSenha ? 'password' : 'text'"
+            autocomplete="new-password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="ocultarSenha = !ocultarSenha"
+            [attr.aria-label]="ocultarSenha ? 'Mostrar senha' : 'Ocultar senha'"
+          >
+            <mat-icon>{{ ocultarSenha ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (formulario.get('senha')?.hasError('pattern')) {
+            <mat-error>Mínimo 8 caracteres, com letras e números</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo-completo">
+          <mat-label>Confirmar senha</mat-label>
+          <input matInput formControlName="confirmarSenha" [type]="ocultarSenha ? 'password' : 'text'" />
+          <mat-icon matPrefix>lock_reset</mat-icon>
+          @if (formulario.hasError('senhasDiferentes') && formulario.get('confirmarSenha')?.touched) {
+            <mat-error>As senhas não coincidem</mat-error>
+          }
+        </mat-form-field>
+
+        @if (erro()) {
+          <p class="erro-servidor">{{ erro() }}</p>
+        }
+
+        <div class="acoes">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            class="campo-completo"
+            [disabled]="carregando()"
+          >
+            @if (carregando()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Cadastrar
+            }
+          </button>
+        </div>
+      </form>
+
+      <div class="links-secundarios">
+        <a routerLink="/login">Já tem conta? Entrar</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

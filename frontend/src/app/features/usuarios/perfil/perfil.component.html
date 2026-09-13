@@ -1,0 +1,43 @@
+<div class="perfil-container">
+  @if (usuario(); as u) {
+    <mat-card class="perfil-card">
+      <div class="perfil-avatar">
+        <mat-icon>account_circle</mat-icon>
+      </div>
+
+      <mat-card-title>{{ u.nome }}</mat-card-title>
+      <mat-card-subtitle>{{ u.telefone }}</mat-card-subtitle>
+
+      <mat-card-content>
+        <div class="linha-info">
+          <span>Perfil de acesso</span>
+          <mat-chip-set>
+            <mat-chip [color]="u.role === 'ADMIN' ? 'accent' : undefined" highlighted>
+              {{ u.role === 'ADMIN' ? 'Administrador' : 'Usuário' }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+
+        <div class="linha-info">
+          <span>Situação</span>
+          <mat-chip-set>
+            <mat-chip [color]="u.ativo ? 'primary' : 'warn'" highlighted>
+              {{ u.ativo ? 'Ativo' : 'Inativo' }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-flat-button color="primary" (click)="editar()">
+          <mat-icon>edit</mat-icon>
+          Editar dados
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  } @else if (carregando()) {
+    <p>Carregando perfil...</p>
+  } @else {
+    <p>Não foi possível carregar o perfil.</p>
+  }
+</div>

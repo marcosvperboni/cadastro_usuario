@@ -1,0 +1,40 @@
+.perfil-container {
+  display: flex;
+  justify-content: center;
+}
+
+.perfil-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 8px;
+
+  .perfil-avatar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  mat-card-title,
+  mat-card-subtitle {
+    text-align: center;
+  }
+
+  .linha-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--app-text-secondary);
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,93 @@
+<div class="lista-container">
+  <div class="cabecalho">
+    <h1>Usuários</h1>
+    <button mat-flat-button color="primary" (click)="novoUsuario()">
+      <mat-icon>person_add</mat-icon>
+      Novo usuário
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="campo-busca">
+    <mat-label>Buscar por nome ou telefone</mat-label>
+    <input matInput (input)="aoDigitarBusca($any($event.target).value)" />
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <div class="tabela-wrapper">
+    @if (carregando()) {
+      <div class="carregando">
+        <mat-spinner diameter="36" />
+      </div>
+    }
+
+    <table mat-table [dataSource]="usuarios()" class="tabela-usuarios">
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.nome }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef>Telefone</th>
+        <td mat-cell *matCellDef="let usuario">{{ usuario.telefone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Perfil de acesso</th>
+        <td mat-cell *matCellDef="let usuario">
+          <mat-form-field appearance="outline" class="select-role" subscriptSizing="dynamic">
+            <mat-select
+              [value]="usuario.role"
+              [disabled]="ehUsuarioLogado(usuario)"
+              (selectionChange)="alterarRole(usuario, $event.value)"
+            >
+              <mat-option value="USER">Usuário</mat-option>
+              <mat-option value="ADMIN">Administrador</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="ativo">
+        <th mat-header-cell *matHeaderCellDef>Situação</th>
+        <td mat-cell *matCellDef="let usuario">
+          <mat-chip-set>
+            <mat-chip [color]="usuario.ativo ? 'primary' : 'warn'" highlighted>
+              {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+            </mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let usuario">
+          <button mat-icon-button matTooltip="Editar" (click)="editarUsuario(usuario)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Excluir"
+            [disabled]="ehUsuarioLogado(usuario)"
+            (click)="excluirUsuario(usuario)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+
+      <tr class="linha-vazia" *matNoDataRow>
+        <td [attr.colspan]="colunas.length">Nenhum usuário encontrado.</td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator
+    [length]="totalRegistros()"
+    [pageSize]="tamanhoPagina()"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="aoMudarPagina($event)"
+  />
+</div>

@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>{{ modoEdicao ? 'Editar usuário' : 'Novo usuário' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="formulario" class="formulario-dialog">
+    <mat-form-field appearance="outline" class="campo-completo">
+      <mat-label>Nome completo</mat-label>
+      <input matInput formControlName="nome" />
+      <mat-icon matPrefix>badge</mat-icon>
+      @if (formulario.get('nome')?.hasError('required') && formulario.get('nome')?.touched) {
+        <mat-error>Informe o nome</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="campo-completo">
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlName="telefone" placeholder="(11) 91234-5678" />
+      <mat-icon matPrefix>phone</mat-icon>
+      @if (formulario.get('telefone')?.hasError('pattern')) {
+        <mat-error>Use o formato (11) 91234-5678</mat-error>
+      }
+    </mat-form-field>
+
+    @if (!modoEdicao) {
+      <mat-form-field appearance="outline" class="campo-completo">
+        <mat-label>Senha</mat-label>
+        <input matInput formControlName="senha" [type]="ocultarSenha ? 'password' : 'text'" />
+        <mat-icon matPrefix>lock</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="ocultarSenha = !ocultarSenha"
+          [attr.aria-label]="ocultarSenha ? 'Mostrar senha' : 'Ocultar senha'"
+        >
+          <mat-icon>{{ ocultarSenha ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (formulario.get('senha')?.hasError('pattern')) {
+          <mat-error>Mínimo 8 caracteres, com letras e números</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    @if (erro()) {
+      <p class="erro-servidor">{{ erro() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" [mat-dialog-close]="null" [disabled]="carregando()">Cancelar</button>
+  <button mat-flat-button color="primary" type="button" (click)="salvar()" [disabled]="carregando()">
+    @if (carregando()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Salvar
+    }
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,37 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span class="titulo">Cadastro de Usuários</span>
+  <span class="espaco"></span>
+
+  @if (authService.estaAutenticado()) {
+    <a mat-button routerLink="/perfil">
+      <mat-icon>person</mat-icon>
+      Meu Perfil
+    </a>
+
+    @if (authService.ehAdmin()) {
+      <a mat-button routerLink="/usuarios">
+        <mat-icon>group</mat-icon>
+        Usuários
+      </a>
+    }
+  }
+
+  <button
+    mat-icon-button
+    type="button"
+    [matTooltip]="themeService.escuro() ? 'Ativar tema claro' : 'Ativar tema escuro'"
+    (click)="alternarTema()"
+  >
+    <mat-icon>{{ themeService.escuro() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+
+  @if (authService.estaAutenticado()) {
+    <button mat-icon-button type="button" matTooltip="Sair" (click)="sair()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  }
+</mat-toolbar>
+
+<main class="conteudo">
+  <router-outlet />
+</main>

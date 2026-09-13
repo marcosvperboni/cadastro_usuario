@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: cadastro-usuario
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cadastro_usuario}
+    username: ${DB_USER:cadastro_usuario}
+    password: ${DB_PASSWORD:cadastro_usuario}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:chave-secreta-de-desenvolvimento-trocar-em-producao-0123456789}
+      expiracao-ms: ${JWT_EXPIRACAO_MS:86400000}
+    reset-token:
+      expiracao-minutos: ${RESET_TOKEN_EXPIRACAO_MINUTOS:30}
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
