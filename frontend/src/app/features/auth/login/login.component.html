@@ -1,0 +1,75 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <div class="auth-icone">
+      <mat-icon>account_circle</mat-icon>
+    </div>
+    <mat-card-title>Entrar</mat-card-title>
+    <mat-card-subtitle>Acesse com seu telefone e senha</mat-card-subtitle>
+
+    <mat-card-content>
+      <form [formGroup]="formulario" (ngSubmit)="entrar()">
+        <mat-form-field appearance="outline" class="campo-completo">
+          <mat-label>Telefone</mat-label>
+          <input
+            matInput
+            formControlName="telefone"
+            placeholder="(11) 91234-5678"
+            autocomplete="tel"
+          />
+          <mat-icon matPrefix>phone</mat-icon>
+          @if (formulario.get('telefone')?.hasError('required') && formulario.get('telefone')?.touched) {
+            <mat-error>Informe o telefone de login</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo-completo">
+          <mat-label>Senha</mat-label>
+          <input
+            matInput
+            formControlName="senha"
+            [type]="ocultarSenha ? 'password' : 'text'"
+            autocomplete="current-password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="ocultarSenha = !ocultarSenha"
+            [attr.aria-label]="ocultarSenha ? 'Mostrar senha' : 'Ocultar senha'"
+          >
+            <mat-icon>{{ ocultarSenha ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (formulario.get('senha')?.hasError('required') && formulario.get('senha')?.touched) {
+            <mat-error>Informe a senha</mat-error>
+          }
+        </mat-form-field>
+
+        @if (erro()) {
+          <p class="erro-servidor">{{ erro() }}</p>
+        }
+
+        <div class="acoes">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            class="campo-completo"
+            [disabled]="carregando()"
+          >
+            @if (carregando()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Entrar
+            }
+          </button>
+        </div>
+      </form>
+
+      <div class="links-secundarios">
+        <a routerLink="/esqueci-senha">Esqueci minha senha</a>
+        <a routerLink="/registrar">Não tem conta? Cadastre-se</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,54 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <div class="auth-icone">
+      <mat-icon>lock_reset</mat-icon>
+    </div>
+    <mat-card-title>Recuperar senha</mat-card-title>
+    <mat-card-subtitle>Informe o telefone cadastrado</mat-card-subtitle>
+
+    <mat-card-content>
+      @if (!enviado()) {
+        <form [formGroup]="formulario" (ngSubmit)="enviar()">
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Telefone</mat-label>
+            <input matInput formControlName="telefone" placeholder="(11) 91234-5678" autocomplete="tel" />
+            <mat-icon matPrefix>phone</mat-icon>
+            @if (formulario.get('telefone')?.hasError('required') && formulario.get('telefone')?.touched) {
+              <mat-error>Informe o telefone</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="acoes">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="campo-completo"
+              [disabled]="carregando()"
+            >
+              @if (carregando()) {
+                <mat-spinner diameter="20" />
+              } @else {
+                Enviar instruções
+              }
+            </button>
+          </div>
+        </form>
+      } @else {
+        <p>
+          Se o telefone informado estiver cadastrado, as instruções de redefinição de senha foram geradas.
+          Use o token recebido na tela de redefinição de senha.
+        </p>
+        <div class="acoes">
+          <a mat-flat-button color="primary" class="campo-completo" routerLink="/redefinir-senha">
+            Já tenho um token
+          </a>
+        </div>
+      }
+
+      <div class="links-secundarios">
+        <a routerLink="/login">Voltar para o login</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

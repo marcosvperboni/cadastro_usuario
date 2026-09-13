@@ -1,0 +1,82 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <div class="auth-icone">
+      <mat-icon>key</mat-icon>
+    </div>
+    <mat-card-title>Redefinir senha</mat-card-title>
+    <mat-card-subtitle>Informe o token recebido e a nova senha</mat-card-subtitle>
+
+    <mat-card-content>
+      @if (!sucesso()) {
+        <form [formGroup]="formulario" (ngSubmit)="redefinir()">
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Token</mat-label>
+            <input matInput formControlName="token" />
+            <mat-icon matPrefix>vpn_key</mat-icon>
+            @if (formulario.get('token')?.hasError('required') && formulario.get('token')?.touched) {
+              <mat-error>Informe o token recebido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Nova senha</mat-label>
+            <input
+              matInput
+              formControlName="novaSenha"
+              [type]="ocultarSenha ? 'password' : 'text'"
+              autocomplete="new-password"
+            />
+            <mat-icon matPrefix>lock</mat-icon>
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="ocultarSenha = !ocultarSenha"
+              [attr.aria-label]="ocultarSenha ? 'Mostrar senha' : 'Ocultar senha'"
+            >
+              <mat-icon>{{ ocultarSenha ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (formulario.get('novaSenha')?.hasError('pattern')) {
+              <mat-error>Mínimo 8 caracteres, com letras e números</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Confirmar nova senha</mat-label>
+            <input matInput formControlName="confirmarSenha" [type]="ocultarSenha ? 'password' : 'text'" />
+            <mat-icon matPrefix>lock_reset</mat-icon>
+            @if (formulario.hasError('senhasDiferentes') && formulario.get('confirmarSenha')?.touched) {
+              <mat-error>As senhas não coincidem</mat-error>
+            }
+          </mat-form-field>
+
+          @if (erro()) {
+            <p class="erro-servidor">{{ erro() }}</p>
+          }
+
+          <div class="acoes">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="campo-completo"
+              [disabled]="carregando()"
+            >
+              @if (carregando()) {
+                <mat-spinner diameter="20" />
+              } @else {
+                Redefinir senha
+              }
+            </button>
+          </div>
+        </form>
+      } @else {
+        <p>Senha redefinida com sucesso! Você será redirecionado para o login.</p>
+      }
+
+      <div class="links-secundarios">
+        <a routerLink="/login">Voltar para o login</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
